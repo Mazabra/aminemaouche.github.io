@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amine Maouche — Développeur iOS · Web · Unity Freelance</title>
+  <meta name="description" content="Portfolio de Amine Maouche, développeur freelance en applications iOS, sites web et jeux Unity 3D." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --card: #12161b;
+      --muted: #8b97a8;
+      --text: #e9eef5;
+      --brand: #6c8cff;
+      --brand-2: #9f7bff;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.25);
+      --maxw: 1100px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(108,140,255,0.16), transparent 60%),
+                  radial-gradient(900px 700px at -10% 10%, rgba(159,123,255,0.14), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header { position: sticky; top: 0; backdrop-filter: blur(10px); background: rgba(11,13,16,0.6); border-bottom: 1px solid rgba(255,255,255,0.06); z-index: 50; }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { font-weight: 800; letter-spacing: .5px; }
+    .nav a { padding: 10px 14px; border-radius: 10px; color: var(--muted); }
+    .nav a:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .cta { background: linear-gradient(90deg, var(--brand), var(--brand-2)); color: white !important; }
+
+    /* Hero */
+    .hero { padding: 96px 0 56px; text-align: center; }
+    .hero h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.05; margin: 0 0 16px; }
+    .hero p { font-size: clamp(16px, 2.6vw, 20px); color: var(--muted); margin: 0 auto 28px; max-width: 780px; }
+    .hero .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 12px; background: #1a2027; border: 1px solid rgba(255,255,255,0.08); color: var(--text); box-shadow: var(--shadow); cursor: pointer; }
+    .btn:hover { transform: translateY(-1px); transition: .2s ease; }
+
+    /* Sections */
+    section { padding: 64px 0; }
+    .section-title { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .section-title h2 { margin: 0; font-size: 26px; }
+    .pill { font-size: 12px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; color: var(--muted); }
+
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 980px){ .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px){ .grid { grid-template-columns: 1fr; } }
+
+    /* Cards (compact) */
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      box-shadow: var(--shadow);
+      transition: transform .16s ease, box-shadow .16s ease;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+
+    .thumb { aspect-ratio: 16/10; background: #0f1318; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-body { padding: 14px; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 10px; }
+    .tag { font-size: 11px; padding: 4px 8px; background: rgba(108,140,255,0.12); border: 1px solid rgba(108,140,255,0.35); color: #cddbff; border-radius: 999px; }
+    .links { display: flex; gap: 10px; margin-top: 10px; }
+
+    /* Overlay et carte agrandie */
+    .overlay {
+      position: fixed; inset: 0;
+      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,.28);
+      opacity: 0; pointer-events: none;
+      transition: opacity .28s ease;
+      z-index: 95;
+    }
+    .overlay.is-visible { opacity: 1; pointer-events: auto; }
+
+    /* Quand la carte passe en mode 'expanded', on la place en fixed avec arrondis et max size */
+    .card.expanding,
+    .card.expanded { transition: left .32s ease, top .32s ease, width .32s ease, height .32s ease, border-radius .32s ease;
+      position: fixed;
+      z-index: 100;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      background: #0f141a;
+    }
+    .card.expanded {
+    width: min(960px, 96vw);
+    height: min(88vh, 880px);
+    border-radius: 18px;
+    overflow: auto;
+    }
+
+
+    /* Contenus compact vs détaillé */
+    .compact { display: block; }
+    .detail { display: none; padding: 16px; }
+    .card.expanded .compact { display: none; }
+    .card.expanded .detail { display: block; }
+
+    /* Détail : petite galerie */
+    .detail .detail-header {
+      position: sticky; top: 0; z-index: 2;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 12px 16px;
+      background: linear-gradient(180deg,#0f141a,rgba(15,20,26,.92));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .close-btn {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      border-radius: 12px; padding: 8px 12px; cursor: pointer;
+    }
+    .detail-gallery { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .detail-gallery img { width:100%; height:260px; object-fit:cover; border-radius:12px; background:#111; }
+    @media (max-width:760px){ .detail-gallery{ grid-template-columns:1fr; } .detail-gallery img{ height:220px; } }
+
+    /* Services / About / Contact */
+    .services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    @media (max-width: 980px){ .services { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px){ .services { grid-template-columns: 1fr; } }
+    .service { padding: 18px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); }
+
+    .about { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: center; }
+    @media (max-width: 820px){ .about { grid-template-columns: 1fr; } }
+    .avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); display: grid; place-items: center; font-weight: 800; font-size: 28px; box-shadow: var(--shadow); }
+
+    .contact { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; }
+    @media (max-width: 860px){ .contact { grid-template-columns: 1fr; } }
+    input, textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: #0f141a; color: var(--text); }
+    textarea { min-height: 120px; resize: vertical; }
+    form .btn { background: linear-gradient(90deg, var(--brand), var(--brand-2)); border: none; }
+    .muted { color: var(--muted); font-size: 14px; }
+
+    footer { padding: 48px 0; color: var(--muted); text-align: center; }
+    .sep { height: 1px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.12), rgba(255,255,255,0)); margin: 10px 0 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="logo">Amine Maouche</div>
+      <nav>
+        <a href="#projets">Projets</a>
+        <a href="#services">Services</a>
+        <a href="#apropos">À propos</a>
+        <a class="cta" href="#contact">Me contacter</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero container" id="hero">
+      <h1>Développeur iOS · Web · Unity <span style="background: linear-gradient(90deg, var(--brand), var(--brand-2)); -webkit-background-clip: text; background-clip: text; color: transparent;">Freelance</span></h1>
+      <p>Je conçois des <strong>applications iOS</strong>, des <strong>sites web</strong> et des <strong>jeux 3D</strong> sur mesure pour startups, PME et créateurs. Code propre, performant, maintenable.</p>
+      <div class="actions">
+        <a class="btn" href="#projets">Voir mes projets</a>
+        <a class="btn cta" href="#contact">Me contacter</a>
+      </div>
+    </section>
+
+    <!-- PROJETS -->
+    <section id="projets">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Portfolio</span>
+          <h2>Projets sélectionnés</h2>
+        </div>
+        
+        <h3 style="margin: 6px 0 14px">Applications iOS</h3>
+        <div class="grid">
+          <!-- APP 1 — Snif Snif -->
+          <article class="card" data-project="snif">
+            <!-- COMPACt -->
+            <div class="compact">
+              <div class="thumb">
+                <img src="images/snif-1.png" alt="Snif Snif — écran liste" loading="lazy" />
+              </div>
+              <div class="card-body">
+                <h4>Snif Snif</h4>
+                <p class="muted">Explorateur de parfums : recherche par notes olfactives, marques et filtres intelligents. UI sombre, animations douces.</p>
+                <div class="tags">
+                  <span class="tag">SwiftUI</span><span class="tag">iOS</span><span class="tag">Local JSON</span>
+                </div>
+                <div class="links">
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">📱 Démo (TestFlight)</a>
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- DÉTAIL (caché tant que non expansé) -->
+            <div class="detail" aria-hidden="true">
+              <div class="detail-header">
+                <strong>Snif Snif — fiche détaillée</strong>
+                <button class="close-btn" type="button">Fermer ✕</button>
+              </div>
+
+              <div class="detail-gallery" style="margin:14px 16px;">
+                <img src="images/snif-1.png" alt="Snif — résultats" />
+                <img src="images/snif-2.png" alt="Snif — random" />
+                <img src="images/snif-3.png" alt="Snif — onboarding 1" />
+                <img src="images/snif-4.png" alt="Snif — onboarding 2" />
+                <img src="images/snif-5.png" alt="Snif — onboarding 3" />
+              </div>
+
+              <div style="padding: 0 16px 16px;">
+                <h3 style="margin:0 0 6px;">Résumé</h3>
+                <p class="muted">Application iOS qui référence des milliers de parfums (base locale JSON) avec recherche full-text, filtres (genre, notes, popularité), et tirage aléatoire de 10 parfums. Design soigné, thème violet, composants réutilisables.</p>
+
+                <h4 style="margin:14px 0 6px;">Fonctionnalités</h4>
+                <p class="muted">🔎 Recherche • 🧠 Filtres intelligents • 🎲 10 parfums au hasard • ⚡️ Perf (LazyVStack) • 🧩 Composants SwiftUI.</p>
+
+                <div class="links" style="margin-top:14px;">
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">📱 TestFlight</a>
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- APP 2 (placeholder) -->
+          <article class="card">
+            <div class="thumb">Image / capture d'écran</div>
+            <div class="card-body">
+              <h4>Nom App 2</h4>
+              <p class="muted">App de [fonctionnalité]. Swift, Firebase, notifications push.</p>
+              <div class="tags"><span class="tag">Swift</span><span class="tag">Firebase</span></div>
+              <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 App Store</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- APP 3 (placeholder) -->
+          <article class="card">
+            <div class="thumb">Image / capture d'écran</div>
+            <div class="card-body">
+              <h4>Nom App 3</h4>
+              <p class="muted">[petite phrase d’accroche]. SwiftUI, CoreData.</p>
+              <div class="tags"><span class="tag">SwiftUI</span><span class="tag">CoreData</span></div>
+              <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 App Store</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="sep"></div>
+
+        <h3 style="margin: 6px 0 14px">Sites web</h3>
+        <div class="grid">
+          <!-- SITE 1 -->
+          <article class="card">
+            <div class="thumb">Aperçu du site</div>
+            <div class="card-body">
+              <h4>Nom Site 1</h4>
+              <p class="muted">Site vitrine pour [client / projet perso]. HTML, CSS, JS, responsive.</p>
+              <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span></div>
+              <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">🌐 Voir le site</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+              </div>
+            </div>
+          </article>
+          <!-- SITE 2 -->
+          <article class="card">
+            <div class="thumb">Aperçu du site</div>
+            <div class="card-body">
+              <h4>Nom Site 2</h4>
+              <p class="muted">[objectif du site] — Stack adaptée.</p>
+              <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span></div>
+              <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">🌐 Voir le site</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="sep"></div>
+
+        <h3 style="margin: 6px 0 14px">Jeux Unity</h3>
+        <div class="grid">
+          <!-- JEU 1 -->
+          <article class="card">
+            <div class="thumb">Capture du jeu</div>
+            <div class="card-body">
+              <h4>Nom Jeu 1</h4>
+              <p class="muted">Jeu mobile 3D — Unity, C#, gameplay arcade.</p>
+              <div class="tags"><span class="tag">Unity</span><span class="tag">C#</span></div>
+              <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">🎮 Démo / Itch.io</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Ce que je fais</span>
+          <h2>Services</h2>
+        </div>
+        <div class="services">
+          <div class="service">
+            <h4>📱 Développement iOS</h4>
+            <p class="muted">Apps Swift/SwiftUI hautes performances, architecture propre (MVVM), intégration API, notifications, CoreData.</p>
+          </div>
+          <div class="service">
+            <h4>🌐 Sites Web responsives</h4>
+            <p class="muted">Sites vitrines et front React/Next. SEO de base, bonnes perfs et accessibilité.</p>
+          </div>
+          <div class="service">
+            <h4>🎮 Jeux Unity 2D/3D</h4>
+            <p class="muted">Prototypage rapide, mécaniques fun, build.</p>
+          </div>
+          <div class="service">
+            <h4>🔧 Maintenance & optimisation</h4>
+            <p class="muted">Corrections de bugs, refonte UI, optimisation, mises à jour.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- A PROPOS -->
+    <section id="apropos">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Qui je suis</span>
+          <h2>À propos</h2>
+        </div>
+        <div class="about">
+          <div class="avatar" aria-label="Avatar">AM</div>
+          <div>
+            <h3 style="margin-top:0">Amine Maouche</h3>
+            <p class="muted">Étudiant ingénieur (prépa intégrée) et développeur freelance. Je crée des produits soignés, maintenables et orientés résultats. Mon approche : comprendre l'objectif business et livrer vite avec un niveau de finition élevé.</p>
+            <ul class="muted" style="padding-left: 18px;">
+              <li>Technos clés : Swift, SwiftUI, UIKit, React/Next.js, Unity/C#</li>
+              <li>Outils : GitHub, Figma, Firebase, REST/GraphQL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Parlons de votre projet</span>
+          <h2>Contact</h2>
+        </div>
+        <div class="contact">
+          <form id="contactForm" onsubmit="return sendMail(event)">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label class="muted" for="name">Nom</label>
+                <input id="name" name="name" placeholder="Votre nom" required />
+              </div>
+              <div>
+                <label class="muted" for="email">Email</label>
+                <input id="email" type="email" name="email" placeholder="you@example.com" required />
+              </div>
+            </div>
+            <div style="margin-top:12px;">
+              <label class="muted" for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Décrivez brièvement votre projet" required></textarea>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center; margin-top:12px;">
+              <button class="btn" type="submit">Envoyer</button>
+              <a class="btn" href="mailto:aminepro.maouche@gmail.com?subject=Projet%20-%20Portfolio%20Amine">Ou m'écrire par email</a>
+            </div>
+            <p id="feedback" class="muted" style="margin-top:8px; display:none;">Merci ! Votre message a été préparé dans votre messagerie.</p>
+          </form>
+          <div>
+            <div class="card" style="padding:16px;">
+              <h4>Disponibilités</h4>
+              <p class="muted">Ouvert aux missions courtes (1–4 semaines) et évolutions continues. Réponse sous 24 h ouvrées.</p>
+              <div class="sep"></div>
+              <h4>Réseaux</h4>
+              <p class="muted"><a href="#" target="_blank" rel="noreferrer">LinkedIn</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> Amine Maouche — Développeur iOS · Web · Unity</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for in-page links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (id.length > 1) {
+          e.preventDefault();
+          document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mailto helper
+    function sendMail(e){
+      e.preventDefault();
+      const name = encodeURIComponent(document.getElementById('name').value.trim());
+      const email = encodeURIComponent(document.getElementById('email').value.trim());
+      const message = encodeURIComponent(document.getElementById('message').value.trim());
+      const subject = `Nouveau projet — ${name}`;
+      const body = `Nom: ${name}%0AEmail: ${email}%0A%0A${message}`;
+      window.location.href = `mailto:aminepro.maouche@gmail.com?subject=${subject}&body=${body}`;
+      document.getElementById('feedback').style.display = 'block';
+      return false;
+    }
+
+    // -------- Card Expander (la carte elle-même s'agrandit) ----------
+    const overlay = document.getElementById('overlay');
+
+    function expandCard(card) {
+      if (card.classList.contains('expanded')) return;
+
+      // mémoriser position/size initiales
+      const rect = card.getBoundingClientRect();
+      const initial = {
+        left: rect.left, top: rect.top, width: rect.width, height: rect.height,
+        scrollY: window.scrollY
+      };
+
+      // placer la carte par-dessus exactement là où elle est
+      Object.assign(card.style, {
+        left: initial.left + 'px',
+        top: initial.top + 'px',
+        width: initial.width + 'px',
+        height: initial.height + 'px'
+      });
+      card.classList.add('expanding');
+
+      // afficher overlay
+      overlay.classList.add('is-visible');
+      document.body.style.overflow = 'hidden';
+
+      // animer vers la taille cible (centrée, 960px max, 88vh)
+      requestAnimationFrame(() => {
+        card.classList.add('expanded');
+        card.style.transition = 'left .32s ease, top .32s ease, width .32s ease, height .32s ease';
+        const margin = 0; // centré via transform
+        const targetW = Math.min(960, window.innerWidth - margin*2);
+        const targetH = Math.min(window.innerHeight * 0.88, 880);
+        const targetL = (window.innerWidth - targetW)/2;
+        const targetT = (window.innerHeight - targetH)/2;
+
+        Object.assign(card.style, {
+          left: targetL + 'px',
+          top: targetT + 'px',
+          width: targetW + 'px',
+          height: targetH + 'px'
+        });
+      });
+
+      // activer contenu détaillé une fois l'anim finie
+      const onOpened = () => {
+        card.querySelector('.detail')?.setAttribute('aria-hidden', 'false');
+        card.removeEventListener('transitionend', onOpened);
+      };
+      card.addEventListener('transitionend', onOpened);
+
+      // fermeture
+      function close() {
+        card.querySelector('.detail')?.setAttribute('aria-hidden', 'true');
+
+        // revenir à la position d'origine
+        card.style.transition = 'left .28s ease, top .28s ease, width .28s ease, height .28s ease';
+        Object.assign(card.style, {
+          left: initial.left + 'px',
+          top: initial.top + 'px',
+          width: initial.width + 'px',
+          height: initial.height + 'px'
+        });
+
+        overlay.classList.remove('is-visible');
+
+        const finish = () => {
+          card.classList.remove('expanded','expanding');
+          card.style.left = card.style.top = card.style.width = card.style.height = '';
+          document.body.style.overflow = '';
+          overlay.removeEventListener('click', close);
+          document.removeEventListener('keydown', onEsc);
+          closeBtn?.removeEventListener('click', close);
+          card.removeEventListener('transitionend', finish);
+          window.scrollTo({ top: initial.scrollY });
+        };
+        card.addEventListener('transitionend', finish, { once: true });
+      }
+
+      const onEsc = (e)=>{ if(e.key === 'Escape') close(); };
+      const closeBtn = card.querySelector('.close-btn');
+
+      overlay.addEventListener('click', close);
+      document.addEventListener('keydown', onEsc);
+      closeBtn?.addEventListener('click', close);
+    }
+
+    // brancher l’ouverture sur la carte et la vignette
+    document.querySelectorAll('.card[data-project="snif"]').forEach(card => {
+      card.addEventListener('click', (e) => {
+        // laisser les vrais liens fonctionner
+        if (e.target.closest('a')) return;
+        expandCard(card);
+      });
+    });
+  </script>
+</body>
+</html>
