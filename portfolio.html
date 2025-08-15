@@ -73,8 +73,20 @@
     }
     .card:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
 
-    .thumb { aspect-ratio: 16/10; background: #0f1318; display: grid; place-items: center; color: var(--muted); font-size: 14px; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb {
+    background: #0f1318;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px; /* espace autour de l'image */
+    }
+
+    .thumb img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    }
     .card-body { padding: 14px; }
     .tags { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 10px; }
     .tag { font-size: 11px; padding: 4px 8px; background: rgba(108,140,255,0.12); border: 1px solid rgba(108,140,255,0.35); color: #cddbff; border-radius: 999px; }
@@ -127,7 +139,8 @@
       border-radius: 12px; padding: 8px 12px; cursor: pointer;
     }
     .detail-gallery { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .detail-gallery img { width:100%; height:260px; object-fit:cover; border-radius:12px; background:#111; }
+    .detail-gallery img { max-width: 100%; height: auto; display: block; margin: 0 auto; /* centrage horizontal */ border-radius: 12px; background: #111;}
+
     @media (max-width:760px){ .detail-gallery{ grid-template-columns:1fr; } .detail-gallery img{ height:220px; } }
 
     /* Services / About / Contact */
@@ -188,21 +201,18 @@
           <!-- APP 1 — Snif Snif -->
           <article class="card" data-project="snif">
             <!-- COMPACt -->
-            <div class="compact">
-              <div class="thumb">
-                <img src="images/snif-1.png" alt="Snif Snif — écran liste" loading="lazy" />
-              </div>
-              <div class="card-body">
-                <h4>Snif Snif</h4>
-                <p class="muted">Explorateur de parfums : recherche par notes olfactives, marques et filtres intelligents. UI sombre, animations douces.</p>
-                <div class="tags">
-                  <span class="tag">SwiftUI</span><span class="tag">iOS</span><span class="tag">Local JSON</span>
-                </div>
-                <div class="links">
-                  <a class="btn" href="#" target="_blank" rel="noreferrer">📱 Démo (TestFlight)</a>
-                  <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
-                </div>
-              </div>
+            <div class="thumb">
+            <img src="images/IMG_4273.jpg" alt="Snif Snif — écran liste" loading="lazy" />
+            </div>
+            <div class="card-body">
+            <h4>Snif Snif</h4>
+            <p class="muted">Explorateur de parfums : recherche par notes olfactives, marques et filtres intelligents. UI sombre, animations douces.</p>
+            <div class="tags">
+                <span class="tag">SwiftUI</span><span class="tag">iOS</span><span class="tag">Local JSON</span>
+            </div>
+            <div class="links">
+                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 Iphone</a>
+            </div>
             </div>
 
             <!-- DÉTAIL (caché tant que non expansé) -->
@@ -213,17 +223,16 @@
               </div>
 
               <div class="detail-gallery" style="margin:14px 16px;">
-                <img src="images/snif-1.png" alt="Snif — résultats" />
-                <img src="images/snif-2.png" alt="Snif — random" />
-                <img src="images/snif-3.png" alt="Snif — onboarding 1" />
-                <img src="images/snif-4.png" alt="Snif — onboarding 2" />
-                <img src="images/snif-5.png" alt="Snif — onboarding 3" />
+                <img src="images/IMG_4268.PNG" alt="Snif — random" />
+                <img src="images/IMG_4269.PNG" alt="Snif — résultats" />
+                <img src="images/IMG_4270.PNG" alt="Snif — onboarding 1" />
+                <img src="images/IMG_4271.PNG" alt="Snif — onboarding 2" />
+                <img src="images/IMG_4272.PNG" alt="Snif — onboarding 3" />
               </div>
 
               <div style="padding: 0 16px 16px;">
                 <h3 style="margin:0 0 6px;">Résumé</h3>
-                <p class="muted">Application iOS qui référence des milliers de parfums (base locale JSON) avec recherche full-text, filtres (genre, notes, popularité), et tirage aléatoire de 10 parfums. Design soigné, thème violet, composants réutilisables.</p>
-
+                <p class="muted">Application iOS qui référence des milliers de parfums (base locale JSON issue de fragrantica) avec recherche full-text, filtres (genre, notes, popularité), et tirage aléatoire de 10 parfums. Design soigné, thème violet, composants réutilisables.</p>
                 <h4 style="margin:14px 0 6px;">Fonctionnalités</h4>
                 <p class="muted">🔎 Recherche • 🧠 Filtres intelligents • 🎲 10 parfums au hasard • ⚡️ Perf (LazyVStack) • 🧩 Composants SwiftUI.</p>
 
@@ -237,30 +246,80 @@
 
           <!-- APP 2 (placeholder) -->
           <article class="card">
-            <div class="thumb">Image / capture d'écran</div>
+            <div class="thumb"> <img src="images/IMG_4274.jpg" alt="Snif Snif — écran liste" loading="lazy" /></div>
             <div class="card-body">
-              <h4>Nom App 2</h4>
-              <p class="muted">App de [fonctionnalité]. Swift, Firebase, notifications push.</p>
-              <div class="tags"><span class="tag">Swift</span><span class="tag">Firebase</span></div>
+              <h4>Vroom Vroom</h4>
+              <p class="muted">Détruisez des voitures en réalité augmentée : visez, touchez et déclenchez explosions, musique et effets visuels immersifs.</p>
+              <div class="tags"><span class="tag">Swift</span><span class="tag">AR</span></div>
               <div class="links">
-                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 App Store</a>
-                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 Iphone</a>
+                <a class="btn" href="#" target="_blank" rel="noreferrer">🚗 Interactif</a>
               </div>
+            </div>
+            <!-- DÉTAIL (caché tant que non expansé) -->
+            <div class="detail" aria-hidden="true">
+              <div class="detail-header">
+                <strong>Vroom Vroom — fiche détaillée</strong>
+                <button class="close-btn" type="button">Fermer ✕</button>
+              </div>
+
+              <div class="detail-gallery" style="margin:14px 16px;">
+                <img src="images/IMG_4275.PNG" alt="Snif — random" />
+                <img src="images/IMG_4276.PNG" alt="Snif — résultats" />
+              </div>
+
+              <div style="padding: 0 16px 16px;">
+                <h3 style="margin:0 0 6px;">Résumé</h3>
+                <p class="muted">Application iOS en réalité augmentée où l’utilisateur peut faire apparaître des voitures autour de lui dans l’espace réel… et les détruire avec son doigt !. En pointant l’écran vers une voiture et en la fixant dans le viseur, un simple toucher déclenche des effets spectaculaires : explosions, éclats de métal, fumée dynamique.</p>
+                <h4 style="margin:14px 0 6px;">Fonctionnalités</h4>
+                <p class="muted"> 🌍 ARKit • 🎯 Ciblage intuitif • 💥 Effets visuels et audio • ⚡️ Gameplay rapide et fun. </p>
+
+                <div class="links" style="margin-top:14px;">
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">📱 Iphone</a>
+                  <a class="btn" href="#" target="_blank" rel="noreferrer">🚗 Réalité augmentée</a>
+                </div>
             </div>
           </article>
 
           <!-- APP 3 (placeholder) -->
           <article class="card">
-            <div class="thumb">Image / capture d'écran</div>
-            <div class="card-body">
-              <h4>Nom App 3</h4>
-              <p class="muted">[petite phrase d’accroche]. SwiftUI, CoreData.</p>
-              <div class="tags"><span class="tag">SwiftUI</span><span class="tag">CoreData</span></div>
-              <div class="links">
-                <a class="btn" href="#" target="_blank" rel="noreferrer">📱 App Store</a>
-                <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
-              </div>
-            </div>
+                <div class="thumb">Image / capture d'écran</div>
+                <div class="card-body">
+                <h4>Nom App 3</h4>
+                <p class="muted">[petite phrase d’accroche]. SwiftUI, CoreData.</p>
+                <div class="tags"><span class="tag">SwiftUI</span><span class="tag">CoreData</span></div>
+                <div class="links">
+                    <a class="btn" href="#" target="_blank" rel="noreferrer">📱 App Store</a>
+                    <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+                </div>
+                </div>
+                <!-- DÉTAIL (caché tant que non expansé) -->
+                <div class="detail" aria-hidden="true">
+                <div class="detail-header">
+                    <strong>Snif Snif — fiche détaillée</strong>
+                    <button class="close-btn" type="button">Fermer ✕</button>
+                </div>
+
+                <div class="detail-gallery" style="margin:14px 16px;">
+                    <img src="images/IMG_4274.jpg" alt="Snif — random" />
+                    <img src="images/IMG_4269.PNG" alt="Snif — résultats" />
+                    <img src="images/IMG_4270.PNG" alt="Snif — onboarding 1" />
+                    <img src="images/IMG_4271.PNG" alt="Snif — onboarding 2" />
+                    <img src="images/IMG_4272.PNG" alt="Snif — onboarding 3" />
+                </div>
+
+                <div style="padding: 0 16px 16px;">
+                    <h3 style="margin:0 0 6px;">Résumé</h3>
+                    <p class="muted">Application iOS qui référence des milliers de parfums (base locale JSON issue de fragrantica) avec recherche full-text, filtres (genre, notes, popularité), et tirage aléatoire de 10 parfums. Design soigné, thème violet, composants réutilisables.</p>
+                    <h4 style="margin:14px 0 6px;">Fonctionnalités</h4>
+                    <p class="muted">🔎 Recherche • 🧠 Filtres intelligents • 🎲 10 parfums au hasard • ⚡️ Perf (LazyVStack) • 🧩 Composants SwiftUI.</p>
+
+                    <div class="links" style="margin-top:14px;">
+                    <a class="btn" href="#" target="_blank" rel="noreferrer">📱 TestFlight</a>
+                    <a class="btn" href="#" target="_blank" rel="noreferrer">💻 Code</a>
+                    </div>
+                </div>
+                </div>
           </article>
         </div>
 
@@ -533,13 +592,15 @@
     }
 
     // brancher l’ouverture sur la carte et la vignette
-    document.querySelectorAll('.card[data-project="snif"]').forEach(card => {
-      card.addEventListener('click', (e) => {
-        // laisser les vrais liens fonctionner
-        if (e.target.closest('a')) return;
-        expandCard(card);
-      });
+    document.querySelectorAll('.card').forEach(card => {
+    if (!card.querySelector('.detail')) return; // seulement celles avec détail
+
+    card.addEventListener('click', (e) => {
+      // Laisser les vrais liens et le bouton fermer fonctionner
+      if (e.target.closest('a, .close-btn')) return;
+      expandCard(card);
     });
-  </script>
+  });
+</script>
 </body>
 </html>
